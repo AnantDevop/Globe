@@ -8,7 +8,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // "standalone" output is for the self-hosted Docker build (see
+  // Dockerfile). Vercel has its own build/runtime tracing and this option
+  // conflicts with it, so skip it when deploying there (Vercel sets
+  // VERCEL=1 automatically).
+  output: process.env.VERCEL ? undefined : "standalone",
   async headers() {
     return [
       {
